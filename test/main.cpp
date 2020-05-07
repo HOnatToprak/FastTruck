@@ -18,7 +18,7 @@ int main() {
     TSPInit init{
         distances,
         1000000,
-        100,
+        1000,
         0.01f,
         0.75f,
         0.05f,
