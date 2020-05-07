@@ -118,7 +118,6 @@ namespace TSP
         std::uniform_real_distribution<float> df;
 
         // For checking collisions;
-        //std::unordered_map<float, bool> check(population.n_cols);
         bool* checks = (bool*) alloca(sizeof(bool) * population.n_cols);
         memset(checks, 0, sizeof(bool) * population.n_cols);
 
@@ -154,7 +153,6 @@ namespace TSP
                 for(int j = cut2 + 1; j < gene_size; ++j)
                     child(j) = new_parent_2(iter++);
 
-                //checks.clear();
                 memset(checks, 0, sizeof(bool) * population.n_cols);
             }
             else
@@ -178,44 +176,5 @@ namespace TSP
             }
         }
     }
-
-    frowvec crossover_ox(const subview_row<float>& parent1, const subview_row<float>& parent2){
-        // For selecting cutting points
-        std::mt19937_64 gen(rand());
-        std::uniform_int_distribution<> di(1, parent1.n_cols - 1);
-
-        // For checking collisions;
-        std::unordered_map<float, bool> checks(parent1.n_cols);
-
-        int cut1 = di(gen), cut2 = di(gen);
-        if(cut1 > cut2) std::swap(cut1, cut2);
-
-        for(int i = cut1; i < cut2; ++i)
-            checks[parent1(i)] = true;
-
-        // Reduce parent2
-        frowvec new_parent_2(parent1.n_cols - cut2 + cut1 - 1);
-        for(int i = 0, j = 0; i < parent1.n_cols; ++i) {
-            if (!checks[parent2(i)])
-                new_parent_2(j++) = parent2(i);
-        }
-
-        frowvec child(parent1.n_cols);
-        int iter = 0;
-        for(int i = 0; i < cut1; ++i)
-            child(i) = new_parent_2(iter++);
-
-        for(int i = cut1; i <= cut2; ++i)
-            child(i) = parent1(i);
-
-        for(int i = cut2 + 1; i < parent1.n_cols; ++i)
-            child(i) = new_parent_2(iter++);
-
-        return child;
-    }
-
-
-
-
 } // namespace TSP
 } // namespace FastTruck
